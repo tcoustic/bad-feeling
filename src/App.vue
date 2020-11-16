@@ -28,8 +28,8 @@ export default {
     return {
       Backgrounds: [
         {id: uniqueId('background-'), title: 'A', skills: [{skillName: "name", level: 1}, {skillName: "another", level: 2}], active: false},
-        {id: uniqueId('background-'), title: 'V', skills: [],active: true},
-        {id: uniqueId('background-'), title: 'S', skills: [],active: false},
+        {id: uniqueId('background-'), title: 'V', skills: [{skillName: "yes", level: 1}, {skillName: "no", level: 2}],active: true},
+        {id: uniqueId('background-'), title: 'S', skills: [{skillName: "name", level: 2}, {skillName: "another", level: 3}],active: false},
         {id: uniqueId('background-'), title: 'R', skills: [],active: false}
       ]
     }
@@ -67,12 +67,10 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
-
 .background {
   padding: 1rem;
   place-items: center;
   border-radius: 1rem;
-
 }
 
 .background-active {
