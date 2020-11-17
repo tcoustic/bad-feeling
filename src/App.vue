@@ -3,11 +3,12 @@
     <character name="Bob" :backgrounds="activeBackgrounds" />
     <div class="background-container">
         <background v-for="background in Backgrounds" :key="background.id"
-            :title="background.title"
-            :active="background.active"
-            :id="background.id"
-            :skills="background.skills"
-            @toggled-background="toggleBackground(background.id)"
+                    :title="background.title"
+                    :active="background.active"
+                    :id="background.id"
+                    :skills="background.skills"
+                    @toggled-background="toggleBackground(background.id)"
+                    :class="{'background-disabled': activeBackgrounds.length >= 3}"
         />
     </div>
   </div>
@@ -33,7 +34,10 @@ export default {
   methods: {
     toggleBackground(backgroundId) {
       const backgroundToToggle = this.Backgrounds.find(background => background.id === backgroundId)
-      backgroundToToggle.active = !backgroundToToggle.active
+      if (backgroundToToggle.active || this.activeBackgrounds.length < 3) {
+        backgroundToToggle.active = !backgroundToToggle.active
+      }
+
     },
     findActiveBackgrounds() {
       return this.Backgrounds.filter(background => background.active === true)
@@ -75,7 +79,7 @@ export default {
 .background-container {
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(192px, 1fr));
 }
 
 .background {
@@ -83,6 +87,11 @@ export default {
   place-items: center;
   border-radius: 1rem;
 }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
 
 .character {
   padding: 1rem;
@@ -97,6 +106,10 @@ export default {
 
 .background-inactive {
   background-color: darkgray;
+}
+
+.background-inactive.background-disabled {
+  opacity: 50%;
 }
 
 </style>

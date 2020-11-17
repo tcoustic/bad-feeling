@@ -14,7 +14,7 @@
         {"name": "Physique", "level": 1},
         {"name": "Shoot", "level": 2},
         {"name": "Investigate", "level": 1},
-        {"name": "Shoot", "level": 1}
+        {"name": "Fight", "level": 1}
       ]
     },{
       "name": "PhD",
