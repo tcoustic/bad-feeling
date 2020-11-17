@@ -1,6 +1,6 @@
 <template>
-  <div>
-    {{ skillName }} {{ level }}
+  <div class="skill">
+    {{ name }} {{ level }}
   </div>
 </template>
 
@@ -8,12 +8,14 @@
 export default {
 name: "Skill",
   props: {
-    skillName: {required: true, type: String},
+    name: {required: true, type: String},
     level: {required: true, type: Number}
   }
 }
 </script>
 
-<style scoped>
-
+<style>
+  .skill {
+    text-transform: capitalize;
+  }
 </style>

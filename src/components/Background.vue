@@ -6,8 +6,8 @@
   >
     <h3 id="background-title">{{title}}</h3>
     <ul aria-labelledby="background-title">
-      <li v-for="skill in skills" :key="skill.skillName">
-        <skill :skillName="skill.skillName" :level="skill.level"/>
+      <li v-for="skill in skills" :key="skill.name">
+        <skill :name="skill.name" :level="skill.level"/>
       </li>
     </ul>
   </div>
@@ -46,4 +46,5 @@ name: "Background",
 </script>
 
 <style>
+
 </style>

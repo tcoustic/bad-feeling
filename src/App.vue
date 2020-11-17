@@ -17,6 +17,7 @@
 import uniqueId from "lodash.uniqueid";
 import Background from "@/components/Background";
 import Character from "@/components/Character";
+import backgrounds from './assets/backgrounds.json'
 
 export default {
   name: 'App',
@@ -26,12 +27,7 @@ export default {
   },
   data() {
     return {
-      Backgrounds: [
-        {id: uniqueId('background-'), title: 'A', skills: [{skillName: "name", level: 1}, {skillName: "another", level: 2}], active: false},
-        {id: uniqueId('background-'), title: 'V', skills: [{skillName: "yes", level: 1}, {skillName: "no", level: 2}],active: true},
-        {id: uniqueId('background-'), title: 'S', skills: [{skillName: "name", level: 2}, {skillName: "another", level: 3}],active: false},
-        {id: uniqueId('background-'), title: 'R', skills: [],active: false}
-      ]
+      Backgrounds: []
     }
   },
   methods: {
@@ -41,7 +37,18 @@ export default {
     },
     findActiveBackgrounds() {
       return this.Backgrounds.filter(background => background.active === true)
+    },
+    importBackgrounds() {
+      this.Backgrounds = []
+      backgrounds.backgrounds.forEach(background => {
+        this.Backgrounds.push(
+            {id: uniqueId('background-'), title: background.name, skills: background.skills, active: false}
+        )
+      })
     }
+  },
+  mounted() {
+    this.importBackgrounds()
   },
   computed: {
     activeBackgrounds() {
@@ -59,6 +66,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: minmax(192px, 25%) 1fr;
+  grid-template-rows: auto 1fr auto;
 }
 
 .background-container {
@@ -71,6 +82,13 @@ export default {
   padding: 1rem;
   place-items: center;
   border-radius: 1rem;
+}
+
+.character {
+  padding: 1rem;
+  place-items: center;
+  border-radius: 1rem;
+  background-color: aquamarine;
 }
 
 .background-active {

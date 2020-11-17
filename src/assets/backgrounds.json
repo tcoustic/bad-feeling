@@ -1,0 +1,53 @@
+{
+  "backgrounds": [
+    {
+      "name": "On the streets",
+      "skills" : [
+        {"name": "Fight", "level": 1},
+        {"name": "Deceive", "level": 2},
+        {"name": "Covert", "level": 1},
+        {"name": "Contacts", "level": 1}
+      ]
+    },{
+      "name": "Detective",
+      "skills" : [
+        {"name": "Physique", "level": 1},
+        {"name": "Shoot", "level": 2},
+        {"name": "Investigate", "level": 1},
+        {"name": "Shoot", "level": 1}
+      ]
+    },{
+      "name": "PhD",
+      "skills" : [
+        {"name": "Resources", "level": 1},
+        {"name": "Academics", "level": 2},
+        {"name": "Engineering", "level": 1},
+        {"name": "Contacts", "level": 1}
+      ]
+    },{
+      "name": "Priest",
+      "skills" : [
+        {"name": "Notice", "level": 1},
+        {"name": "Will", "level": 2},
+        {"name": "Empathy", "level": 1},
+        {"name": "Contacts", "level": 1}
+      ]
+    },{
+      "name": "Pilot",
+      "skills" : [
+        {"name": "Gunnery", "level": 1},
+        {"name": "Pilot", "level": 2},
+        {"name": "Engineering", "level": 1},
+        {"name": "Will", "level": 1}
+      ]
+    },{
+      "name": "Engineer",
+      "skills" : [
+        {"name": "Academics", "level": 1},
+        {"name": "Engineering", "level": 2},
+        {"name": "Notice", "level": 1},
+        {"name": "Resources", "level": 1}
+      ]
+    }
+  ]
+}
