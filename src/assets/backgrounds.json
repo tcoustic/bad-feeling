@@ -2,12 +2,14 @@
   "backgrounds": [
     {
       "name": "On the streets",
+      "description": "The concrete raised you",
       "skills" : [
         {"name": "Fight", "level": 1},
         {"name": "Deceive", "level": 2},
         {"name": "Covert", "level": 1},
         {"name": "Contacts", "level": 1}
-      ]
+      ],
+      "stunt": "Street cred:"
     },{
       "name": "Detective",
       "skills" : [

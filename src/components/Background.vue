@@ -1,15 +1,19 @@
 <template>
   <div class="background"
        :id = "id"
-       :class="{ 'background-active': isActive, 'background-inactive': !isActive}"
+       :class="{ 'background-active': isActive }"
         @click="$emit('toggled-background')"
   >
-    <h3 id="background-title">{{title}}</h3>
+    <h3>{{title}}</h3>
+    <h5 class="description">{{description}}</h5>
     <ul aria-labelledby="background-title">
       <li v-for="skill in skills" :key="skill.name">
         <skill :name="skill.name" :level="skill.level"/>
       </li>
     </ul>
+    <span>
+      {{stunt}}
+    </span>
   </div>
 </template>
 
@@ -21,8 +25,10 @@ name: "Background",
   components: {Skill},
   props: {
     title: {required: true, type: String},
+    description: {default: '', type: String},
     active: {default: false, type: Boolean},
     skills: {type: Array, required: true},
+    stunt: {default: '', type: String},
     id: {required: true, type: String}
   },
   data() {

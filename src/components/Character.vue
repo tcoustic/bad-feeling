@@ -1,13 +1,21 @@
 <template>
   <div class="character">
+    <button @click="$emit('clear-character')">Clear</button>
+    <div>
       <label for="character-name">Name:
         <input id="character-name" v-model="name">
       </label>
+    </div>
     <div>
       <ul id="skills">
         <li v-for="skill in characterSkills" :key="skill.name">
           <skill :name="skill.name" :level="skill.level"/>
         </li>
+      </ul>
+    </div>
+    <div>
+      <ul id="stunts">
+        <li v-for="stunt in s=characterStunts" :key="stunt">{{stunt}}</li>
       </ul>
     </div>
   </div>
@@ -37,6 +45,11 @@ name: "Character",
         }
     )
     return skillList.sort((a, b) => b.level - a.level)
+    },
+    characterStunts() {
+      const stuntList = []
+      this.backgrounds.forEach(background => {stuntList.push(background.stunt)})
+      return stuntList
     }
   }
 }
