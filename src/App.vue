@@ -1,6 +1,14 @@
 <template>
   <section id="app">
-    <character name="Bob" :backgrounds="activeBackgrounds" @clear-character="clearCharacter" />
+    <character name="Bob"
+               :backgrounds="activeBackgrounds"
+               :skill-adjustments="SkillAdjustments"
+               :all-skills="allSkills"
+               :adjusting-skills="adjustingSkills"
+               @clear-character="clearCharacter"
+               @adjust-skills="toggleSkillAdjustment"
+               @adjust="changeSkillAdjustment"
+    />
     <div class="background-container">
         <background v-for="background in Backgrounds" :key="background.id"
                     :title="background.title"
@@ -31,7 +39,9 @@ export default {
   },
   data() {
     return {
-      Backgrounds: []
+      Backgrounds: [],
+      SkillAdjustments: [],
+      adjustingSkills: false
     }
   },
   methods: {
@@ -43,8 +53,40 @@ export default {
       }
 
     },
+
+    toggleSkillAdjustment() {
+      this.adjustingSkills = !this.adjustingSkills
+    },
+
+    changeSkillAdjustment(adjustment) {
+      const foundSkill = this.SkillAdjustments.find(skill => skill.name === adjustment.name)
+      if(foundSkill != null) {
+        adjustment.level += foundSkill.level
+        this.SkillAdjustments.splice(this.SkillAdjustments.indexOf(foundSkill))
+      }
+      if(adjustment.level !== 0) {
+        this.SkillAdjustments.push(adjustment)
+      }
+      StorageService.storeAdjustments(this.SkillAdjustments)
+    },
+
     findActiveBackgrounds() {
       return this.Backgrounds.filter(background => background.active === true)
+    },
+
+    listAllSkills() {
+      let skillArray = []
+      this.Backgrounds.forEach(background => {
+        background.skills.forEach(skill => skillArray.push(skill.name))
+      })
+      return skillArray.filter((value, index, self) => {
+        return self.indexOf(value) === index
+      }).sort()
+
+    },
+
+    importAdjustments() {
+      this.SkillAdjustments = StorageService.fetchAdjustments() || []
     },
 
     importBackgrounds() {
@@ -61,20 +103,27 @@ export default {
     clearCharacter() {
       StorageService.clearBackgroundsStorage()
       this.importBackgrounds()
+      this.importAdjustments()
     }
   },
   mounted() {
     this.importBackgrounds()
+    this.importAdjustments()
   },
   computed: {
     activeBackgrounds() {
       return this.findActiveBackgrounds()
+    },
+    allSkills() {
+      return this.listAllSkills()
     }
   }
 }
 </script>
 
 <style>
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -86,13 +135,22 @@ export default {
   margin-top: 60px;
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: minmax(16rem, 25%) 1fr;
+  grid-template-columns: minmax(12rem, 25%) 1fr;
   grid-template-rows: auto 1fr auto;
 }
+
+@media screen and (max-width: 592px){
+  #app {
+    grid-template-columns: auto;
+    grid-template-rows: auto minmax(8rem, 40%) 1fr auto;
+  }
+}
+
 
 .background-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   grid-gap: 1rem;
 }
 
@@ -110,7 +168,7 @@ ul {
 }
 
 .background {
-  flex: 0 1 12rem;
+  flex: 0 1 8rem;
   padding: 1rem;
   place-items: center;
   border-radius: .5rem;

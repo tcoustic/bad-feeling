@@ -1,6 +1,7 @@
 export const CHARACTER_STORAGE_KEY = 'characters'
 
 export const BACKGROUNDS_STORAGE_KEY = 'backgrounds'
+export const ADJUSTMENTS_STORAGE_KEY = 'adjustments'
 
 
 export const StorageService = {
@@ -8,12 +9,21 @@ export const StorageService = {
         return LocalStorageHandler.getItem(BACKGROUNDS_STORAGE_KEY)
     },
 
+    fetchAdjustments() {
+        return LocalStorageHandler.getItem(ADJUSTMENTS_STORAGE_KEY)
+    },
+
     storeBackgrounds(backgrounds) {
         LocalStorageHandler.setItem(BACKGROUNDS_STORAGE_KEY, backgrounds)
     },
 
+    storeAdjustments(adjustments) {
+        LocalStorageHandler.setItem(ADJUSTMENTS_STORAGE_KEY, adjustments)
+    },
+
     clearBackgroundsStorage() {
-        LocalStorageHandler.removeItem(BACKGROUNDS_STORAGE_KEY)
+        LocalStorageHandler.purgeStorage()
+
     }
 }
 
