@@ -17,8 +17,9 @@
                     :id="background.id"
                     :skills="background.skills"
                     :stunt="background.stunt"
+                    :type="background.type"
                     @toggled-background="toggleBackground(background.id)"
-                    :class="{'background-disabled': activeBackgrounds.length >= 3}"
+                    :class="{'background-disabled': activeBackgrounds.length >= totalLimit}"
         />
     </div>
   </section>
@@ -28,7 +29,7 @@
 import uniqueId from "lodash.uniqueid";
 import Background from "@/components/Background";
 import Character from "@/components/Character";
-import backgrounds from './assets/backgrounds.json'
+import systemData from './assets/backgrounds.json'
 import {StorageService} from '@/services/LocalStorageService'
 
 export default {
@@ -41,17 +42,19 @@ export default {
     return {
       Backgrounds: [],
       SkillAdjustments: [],
+      Limits: [],
       adjustingSkills: false
     }
   },
   methods: {
     toggleBackground(backgroundId) {
+      this.findActiveBackgroundTypes()
       const backgroundToToggle = this.Backgrounds.find(background => background.id === backgroundId)
-      if (backgroundToToggle.active || this.activeBackgrounds.length < 3) {
+      if (backgroundToToggle.active || this.activeBackgrounds.length < this.totalLimit) {
         backgroundToToggle.active = !backgroundToToggle.active
         StorageService.storeBackgrounds(this.Backgrounds)
+        StorageService.storeLimits(this.Limits)
       }
-
     },
 
     toggleSkillAdjustment() {
@@ -74,6 +77,23 @@ export default {
       return this.Backgrounds.filter(background => background.active === true)
     },
 
+    findActiveBackgroundTypes() {
+      this.Limits.forEach(limit => limit.current = 0)
+      this.activeBackgrounds.forEach(background => {
+        let foundLimit = this.Limits.find(limit => limit.name === background.type)
+        if (foundLimit === undefined) {
+          this.Limits.push(
+              {
+                name: background.type,
+                current: 1
+              }
+          )
+        } else {
+          foundLimit.current++
+        }
+      })
+    },
+
     listAllSkills() {
       let skillArray = []
       this.Backgrounds.forEach(background => {
@@ -82,31 +102,79 @@ export default {
       return skillArray.filter((value, index, self) => {
         return self.indexOf(value) === index
       }).sort()
+    },
 
+    listAllBackgroundTypes() {
+      let typesArray = []
+      this.Backgrounds.forEach(background => typesArray.push(background.type))
+      return typesArray.filter((value, index, self) => {
+        return self.indexOf(value) === index
+      }).sort()
     },
 
     importAdjustments() {
       this.SkillAdjustments = StorageService.fetchAdjustments() || []
     },
 
+    importLimits() {
+      this.Limits = StorageService.fetchLimits()
+      if (this.Limits === null) {
+        this.Limits = []
+        systemData.limits.forEach(limit => {
+          this.Limits.push(
+              {
+                name: limit.name,
+                limit: limit.limit,
+                current: 0
+              }
+          )
+        })
+        if (this.Limits.find(limit => limit.name === "totalLimit") === undefined) {
+          this.Limits.push(
+              {
+                name: "totalLimit",
+                limit: 4,
+                current: 0
+              }
+          )
+        }
+      }
+    },
+
     importBackgrounds() {
       this.Backgrounds = StorageService.fetchBackgrounds()
-      if (this.Backgrounds === null || this.Backgrounds === []){
+      if (this.Backgrounds === null || this.Backgrounds === []) {
         this.Backgrounds = []
-        backgrounds.backgrounds.forEach(background => {
+        systemData.backgrounds.forEach(background => {
           this.Backgrounds.push(
-              {id: uniqueId('background-'),description: background.description, title: background.name, skills: background.skills,stunt: background.stunt , active: false}
+              {
+                id: uniqueId('background-'),
+                description: background.description,
+                title: background.name,
+                skills: background.skills,
+                stunt: background.stunt,
+                type: background.type,
+                active: false
+              }
           )
         })
       }
+        this.Backgrounds.sort(function (a, b) {
+          if(a.type > b.type) {return 1}
+          if(a.type < b.type) {return -1}
+          return 0
+        })
+
     },
     clearCharacter() {
       StorageService.clearBackgroundsStorage()
       this.importBackgrounds()
       this.importAdjustments()
+      this.importLimits()
     }
   },
   mounted() {
+    this.importLimits()
     this.importBackgrounds()
     this.importAdjustments()
   },
@@ -116,6 +184,12 @@ export default {
     },
     allSkills() {
       return this.listAllSkills()
+    },
+    allBackgroundTypes() {
+      return this.listAllBackgroundTypes()
+    },
+    totalLimit() {
+      return this.Limits.find(limit => limit.name === "totalLimit").limit
     }
   }
 }
@@ -123,6 +197,21 @@ export default {
 
 <style>
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -148,8 +237,8 @@ export default {
 
 
 .background-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(10rem, 1fr));
   justify-content: center;
   grid-gap: 1rem;
 }
@@ -168,12 +257,19 @@ ul {
 }
 
 .background {
-  flex: 0 1 8rem;
+  flex: 0 1 10rem;
   padding: 1rem;
   place-items: center;
   border-radius: .5rem;
   background-color: darkgray;
   box-shadow: 2px 2px 4px black;
+  animation-name: fadeIn;
+  animation-duration: 0.4s;
+}
+
+.background:hover {
+  transform: scale(0.99);
+  box-shadow: 2px 2px 3px black;
 }
 
 .background-disabled {
@@ -184,6 +280,14 @@ ul {
   opacity: 1;
   background-color: dimgray;
   color: lightgray;
+  box-shadow: 1px 1px 3px black;
+}
+
+.education {
+  border: 1px solid cornflowerblue;
+}
+
+.background-active:hover {
   box-shadow: 1px 1px 2px black;
 }
 

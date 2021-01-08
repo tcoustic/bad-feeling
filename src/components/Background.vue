@@ -1,7 +1,7 @@
 <template>
   <div class="background"
        :id = "id"
-       :class="{ 'background-active': isActive }"
+       :class="[{ 'background-active': isActive }, backgroundType]"
         @click="$emit('toggled-background')"
   >
     <h3>{{title}}</h3>
@@ -26,6 +26,7 @@ name: "Background",
   props: {
     title: {required: true, type: String},
     description: {default: '', type: String},
+    type: {type: String, default: ''},
     active: {default: false, type: Boolean},
     skills: {type: Array, required: true},
     stunt: {default: '', type: String},
@@ -33,7 +34,8 @@ name: "Background",
   },
   data() {
    return {
-     backgroundSkills: []
+     backgroundSkills: [],
+     backgroundType: this.type
    }
   },
   created() {
