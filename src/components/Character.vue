@@ -10,7 +10,11 @@
       <button @click="$emit('adjust-skills')">Adjust</button>
       <ul v-if="!adjustingSkills" id="skills">
         <li v-for="skill in characterSkills" :key="skill.name">
-          <skill :name="skill.name" :level="skill.level" :adjusting = "false"/>
+          <skill
+              :name="skill.name"
+              :level="skill.level"
+              :class="[{ 'adjusted' : skill.adjusted }]"
+              :adjusting = "false"/>
         </li>
       </ul>
       <ul v-else id="skills-adjustments">
@@ -49,10 +53,12 @@ name: "Character",
     characterSkills() {
       const skillList = []
 
-      function addSkill(skill) {
+      function addSkill(skill, adjust = false) {
         const foundSkill = skillList.find(elem => elem.name === skill.name)
         let skillToPush = {name: skill.name,
-          level:(foundSkill !== undefined)? foundSkill.level + skill.level : skill.level}
+          level:(foundSkill !== undefined)? foundSkill.level + skill.level : skill.level,
+        adjusted: adjust,
+        adjustment: adjust? skill.level : 0}
         skillList.push(skillToPush)
         if(foundSkill !== undefined) skillList.splice(skillList.indexOf(foundSkill), 1)
       }
@@ -62,7 +68,7 @@ name: "Character",
         }
     )
     this.skillAdjustments.forEach(
-        adjustment => addSkill(adjustment)
+        adjustment => addSkill(adjustment, true)
     )
     return skillList.sort((a, b) => b.level - a.level)
     },
@@ -70,6 +76,11 @@ name: "Character",
       const stuntList = []
       this.backgrounds.forEach(background => {stuntList.push(background.stunt)})
       return stuntList
+    },
+    totalAdjustments() {
+      var total = 0
+      this.skillAdjustments.forEach(skill => total += skill.level)
+      return total
     }
   }
 }

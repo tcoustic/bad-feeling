@@ -121,7 +121,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "education",
       "skills" : [
         {"name": "Stealth", "level": 1},
         {"name": "Will", "level": 2},
@@ -169,7 +169,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "education",
       "skills" : [
         {"name": "Resources", "level": 1},
         {"name": "Shoot", "level": 2},
@@ -181,7 +181,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "education",
       "skills" : [
         {"name": "Burglary", "level": 1},
         {"name": "Stealth", "level": 2},
@@ -241,7 +241,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "education",
       "skills" : [
         {"name": "Will", "level": 1},
         {"name": "Resources", "level": 2},

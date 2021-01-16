@@ -19,7 +19,7 @@
                     :stunt="background.stunt"
                     :type="background.type"
                     @toggled-background="toggleBackground(background.id)"
-                    :class="{'background-disabled': activeBackgrounds.length >= totalLimit}"
+                    :class="{'background-disabled': activeBackgrounds.length >= totalLimit || typeLimit(background.type)}"
         />
     </div>
   </section>
@@ -48,10 +48,21 @@ export default {
   },
   methods: {
     toggleBackground(backgroundId) {
-      this.findActiveBackgroundTypes()
       const backgroundToToggle = this.Backgrounds.find(background => background.id === backgroundId)
-      if (backgroundToToggle.active || this.activeBackgrounds.length < this.totalLimit) {
+      const backgroundsTypeCurrentLimit = this.Limits.find(limit => limit.name === backgroundToToggle.type)
+      if (
+              backgroundToToggle.active ||
+              (
+                  this.activeBackgrounds.length < this.totalLimit &&
+                  (
+                      backgroundsTypeCurrentLimit === undefined ||
+                      backgroundsTypeCurrentLimit.current < backgroundsTypeCurrentLimit.limit ||
+                      backgroundsTypeCurrentLimit.limit === undefined
+                  )
+              )
+          ) {
         backgroundToToggle.active = !backgroundToToggle.active
+        this.findActiveBackgroundTypes()
         StorageService.storeBackgrounds(this.Backgrounds)
         StorageService.storeLimits(this.Limits)
       }
@@ -65,7 +76,7 @@ export default {
       const foundSkill = this.SkillAdjustments.find(skill => skill.name === adjustment.name)
       if(foundSkill != null) {
         adjustment.level += foundSkill.level
-        this.SkillAdjustments.splice(this.SkillAdjustments.indexOf(foundSkill))
+        this.SkillAdjustments.splice(this.SkillAdjustments.indexOf(foundSkill), 1)
       }
       if(adjustment.level !== 0) {
         this.SkillAdjustments.push(adjustment)
@@ -171,6 +182,10 @@ export default {
       this.importBackgrounds()
       this.importAdjustments()
       this.importLimits()
+    },
+    typeLimit(type) {
+      const limit = this.Limits.find(limit => limit.name === type)
+      return !(limit === undefined || limit.limit === undefined || limit.current < limit.limit)
     }
   },
   mounted() {
@@ -287,6 +302,10 @@ ul {
   border: 1px solid cornflowerblue;
 }
 
+.upbringing {
+  border: 1px solid coral;
+}
+
 .background-active:hover {
   box-shadow: 1px 1px 2px black;
 }
@@ -296,6 +315,9 @@ ul {
   font-style: italic;
 }
 
+.adjusted {
+  color: cornflowerblue;
+}
 
 
 
