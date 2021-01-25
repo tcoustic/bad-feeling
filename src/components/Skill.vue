@@ -1,7 +1,7 @@
 <template>
-  <div class="skill">
+  <div class="skill" :class="[{'adjusting' : adjusting}]">
     <button v-if="adjusting" @click="adjust(-1)">-</button>
-    {{ name }} {{ level }}
+    <div>{{ name }} {{ level }}</div>
     <button v-if="adjusting" @click="adjust(1)">+</button>
   </div>
 </template>
@@ -25,5 +25,16 @@ name: "Skill",
 <style>
   .skill {
     text-transform: capitalize;
+  }
+
+  .adjusting {
+    display: grid;
+    opacity: 0.8;
+    grid-template-columns: auto 1fr auto;;
+  }
+
+  .adjusting:hover {
+    opacity: 1;
+    background: darkgrey;
   }
 </style>

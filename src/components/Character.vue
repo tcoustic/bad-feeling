@@ -8,12 +8,21 @@
     </div>
     <div>
       <button @click="$emit('adjust-skills')">Adjust</button>
+
+      <button v-if="adjustingSkills" @click="$emit('reset-adjustments')">Reset Adjustments</button>
+      <div v-if="adjustingSkills">Total adjustment: {{totalAdjustments}}</div>
       <ul v-if="!adjustingSkills" id="skills">
         <li v-for="skill in characterSkills" :key="skill.name">
           <skill
               :name="skill.name"
               :level="skill.level"
-              :class="[{ 'adjusted' : skill.adjusted }]"
+              :class="[{
+                'adjusted' : skill.adjusted,
+                'adjusted-up' : skill.adjustment > 0,
+                'adjusted-down' : skill.adjustment < 0,
+                'added' : skill.adjustment === skill.level
+
+              }]"
               :adjusting = "false"/>
         </li>
       </ul>
@@ -25,7 +34,7 @@
     </div>
     <div>
       <ul id="stunts">
-        <li v-for="stunt in s=characterStunts" :key="stunt">{{stunt}}</li>
+        <li v-for="stunt in s=characterStunts" :key="stunt.id">{{stunt.stunt}}</li>
       </ul>
     </div>
   </div>
@@ -74,11 +83,11 @@ name: "Character",
     },
     characterStunts() {
       const stuntList = []
-      this.backgrounds.forEach(background => {stuntList.push(background.stunt)})
+      this.backgrounds.forEach(background => {stuntList.push({stunt: background.stunt, id: background.id})})
       return stuntList
     },
     totalAdjustments() {
-      var total = 0
+      let total = 0;
       this.skillAdjustments.forEach(skill => total += skill.level)
       return total
     }

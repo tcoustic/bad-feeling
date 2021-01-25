@@ -1,5 +1,12 @@
 <template>
   <section id="app">
+    <div class="limit-container">
+      <background-limit-counter v-for="limit in displayableLimits" :key="limit.name"
+                                :name="limit.name"
+                                :limit="limit.limit"
+                                :current="limit.current"
+                                />
+    </div>
     <character name="Bob"
                :backgrounds="activeBackgrounds"
                :skill-adjustments="SkillAdjustments"
@@ -8,6 +15,7 @@
                @clear-character="clearCharacter"
                @adjust-skills="toggleSkillAdjustment"
                @adjust="changeSkillAdjustment"
+               @reset-adjustments="resetSkillAdjustments"
     />
     <div class="background-container">
         <background v-for="background in Backgrounds" :key="background.id"
@@ -31,10 +39,12 @@ import Background from "@/components/Background";
 import Character from "@/components/Character";
 import systemData from './assets/backgrounds.json'
 import {StorageService} from '@/services/LocalStorageService'
+import BackgroundLimitCounter from "@/components/BackgroundLimitCounter";
 
 export default {
   name: 'App',
   components: {
+    BackgroundLimitCounter,
     Character,
     Background
   },
@@ -72,6 +82,11 @@ export default {
       this.adjustingSkills = !this.adjustingSkills
     },
 
+    resetSkillAdjustments() {
+      this.SkillAdjustments = []
+      StorageService.storeAdjustments(this.SkillAdjustments)
+    },
+
     changeSkillAdjustment(adjustment) {
       const foundSkill = this.SkillAdjustments.find(skill => skill.name === adjustment.name)
       if(foundSkill != null) {
@@ -90,7 +105,9 @@ export default {
 
     findActiveBackgroundTypes() {
       this.Limits.forEach(limit => limit.current = 0)
+      let totalLimit = this.Limits.find(limit => limit.name === "totalLimit")
       this.activeBackgrounds.forEach(background => {
+        totalLimit.current++
         let foundLimit = this.Limits.find(limit => limit.name === background.type)
         if (foundLimit === undefined) {
           this.Limits.push(
@@ -182,6 +199,7 @@ export default {
       this.importBackgrounds()
       this.importAdjustments()
       this.importLimits()
+      this.adjustingSkills = false
     },
     typeLimit(type) {
       const limit = this.Limits.find(limit => limit.name === type)
@@ -205,6 +223,9 @@ export default {
     },
     totalLimit() {
       return this.Limits.find(limit => limit.name === "totalLimit").limit
+    },
+    displayableLimits() {
+      return this.Limits.filter(limit => limit.limit !== undefined)
     }
   }
 }
@@ -250,6 +271,13 @@ export default {
   }
 }
 
+.limit-container {
+  grid-column: 1/4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(10rem, 1fr));
+  justify-content: center;
+  grid-gap: 1rem;
+}
 
 .background-container {
   display: grid;
@@ -269,6 +297,15 @@ ul {
   border-radius: .5rem;
   background-color: lightgray;
   box-shadow: 2px 2px 4px black;
+}
+
+.background-limit-counter {
+  place-items: center;
+  border-radius: .5rem;
+  background-color: darkgray;
+  box-shadow: 1px 1px 2px black inset;
+  animation-name: fadeIn;
+  animation-duration: 0.4s;
 }
 
 .background {
@@ -291,6 +328,10 @@ ul {
   opacity: 0.5;
 }
 
+.background-disabled:hover {
+  transform: scale(1);
+}
+
 .background-active {
   opacity: 1;
   background-color: dimgray;
@@ -306,6 +347,14 @@ ul {
   border: 1px solid coral;
 }
 
+.events {
+  border: 1px solid greenyellow;
+}
+
+.totalLimit {
+  border: 1px solid dimgrey;
+}
+
 .background-active:hover {
   box-shadow: 1px 1px 2px black;
 }
@@ -315,8 +364,16 @@ ul {
   font-style: italic;
 }
 
-.adjusted {
+.adjusted-up {
   color: cornflowerblue;
+}
+
+.adjusted-down {
+  color: coral;
+}
+
+.added {
+  font-style: italic;
 }
 
 

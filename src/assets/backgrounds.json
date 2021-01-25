@@ -10,6 +10,10 @@
   {
     "name": "education",
     "limit": 2
+  },
+  {
+    "name": "events",
+    "limit": 2
   }
   ],
   "backgrounds": [
@@ -26,7 +30,7 @@
       "stunt": "Street cred:"
     },{
       "name": "Detective",
-      "type": "c",
+      "type": "education",
       "skills" : [
         {"name": "Physique", "level": 1},
         {"name": "Shoot", "level": 2},
@@ -44,7 +48,7 @@
       ]
     },{
       "name": "Priest",
-      "type": "b",
+      "type": "education",
       "skills" : [
         {"name": "Notice", "level": 1},
         {"name": "Will", "level": 2},
@@ -53,7 +57,7 @@
       ]
     },{
       "name": "Pilot",
-      "type": "z",
+      "type": "education",
       "skills" : [
         {"name": "Gunnery", "level": 1},
         {"name": "Pilot", "level": 2},
@@ -85,7 +89,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "events",
       "skills" : [
         {"name": "Deceive", "level": 1},
         {"name": "Drive", "level": 2},
@@ -109,7 +113,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "events",
       "skills" : [
         {"name": "Provoke", "level": 1},
         {"name": "Rapport", "level": 2},
@@ -157,7 +161,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "events",
       "skills" : [
         {"name": "Notice", "level": 1},
         {"name": "Physique", "level": 2},
@@ -169,7 +173,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "education",
+      "type": "events",
       "skills" : [
         {"name": "Resources", "level": 1},
         {"name": "Shoot", "level": 2},
@@ -276,7 +280,7 @@
     {
       "name": "Lorem ipsum dolor",
       "description": "Maecenas efficitur libero mi, eget efficitur felis posuere at.",
-      "type": "upbringing",
+      "type": "events",
       "skills" : [
         {"name": "Fight", "level": 1},
         {"name": "Physique", "level": 2},
